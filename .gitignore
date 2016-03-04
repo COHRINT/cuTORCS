@@ -26,3 +26,21 @@
 *.exe
 *.out
 *.app
+
+# Make output
+.torcs.rc
+config.log
+config.status
+export/
+setup_linux.sh
+torcs
+accc
+nfs2ac
+nfsperf
+infsperf
+texmapper
+trackgen
+*.depend
+**/specfiles/*.spec
+**/gennmtab
+**/torcs-bin

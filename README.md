@@ -55,3 +55,17 @@ TORCS: <br />
 6. make datainstall
 <br />
 Finally, enter 'torcs' into the terminal to run the program. Profit. <br />
+
+## For those participating in the project
+We want to store keep these origianl files in the repo:
+```
+/src/doc/torcsdoc.conf
+config.h
+Make-config
+```
+But, they should be modified when making on your computer. In order to ignore these files that are already in the repo use the following commands. This will allow the file to be in the repository in its origianl form but to be changed on your local computer.
+```
+git update-index --assume-unchanged */Make-config
+git update-index --assume-unchanged */config.h
+git update-index --assume-unchanged */src/doc/torcsdoc.conf
+```
