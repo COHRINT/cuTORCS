@@ -48,7 +48,7 @@ sudo make install
 * Export the following using terminal:
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-export TORCS_BASE=YOUR_PATH_TO_TORCS
+export TORCS_BASE=***YOUR_PATH_TO_TORCS***
 export MAKE_DEFAULT=$TORCS_BASE/Make-default.mk
 ```
 * Input(for x64):
