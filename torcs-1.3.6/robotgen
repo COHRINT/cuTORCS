@@ -6,7 +6,7 @@
 #    created              : Mon Jul 29 21:01:37 CEST 2002
 #    copyright            : (C) 2002 by Eric Espié                        
 #    email                : Eric.Espie@torcs.org   
-#    version              : $Id: robotgen,v 1.4.2.1 2013/01/12 14:36:45 berniw Exp $                                  
+#    version              : $Id: robotgen,v 1.2 2002/08/01 23:15:23 torcs Exp $                                  
 #
 ##############################################################################
 #
@@ -51,7 +51,7 @@ then
     usage
 fi
 
-CATEGORY=$(grep category data/cars/models/$CAR/$CAR.xml | sed -e 's/^.*val=\"//' -e 's/\".*$//')
+CATEGORY=$(grep category /usr/local/share/games/torcs/cars/$CAR/$CAR.xml | sed -e 's/^.*val=\"//' -e 's/\".*$//')
 
 if [ -z "$CATEGORY" ]
 then
@@ -65,19 +65,6 @@ ROBOTDIR=src/drivers/$NAME
 rm -rf $ROBOTDIR
 
 mkdir $ROBOTDIR || exit 1
-
-echo -n "Copying $CAR.rgb ... "
-cp data/cars/models/$CAR/$CAR.rgb $ROBOTDIR || exit 1
-cp data/cars/models/$CAR/$CAR.xcf $ROBOTDIR 2>/dev/null
-if [ $? == 0 ]
-then
-    echo -n "and $CAR.xcf ... "
-fi
-echo "done"
-
-echo -n "Copying logo.rgb ... "
-cp data/data/textures/logo.rgb $ROBOTDIR || exit 1
-echo "done"
 
 MAKEFILE=$ROBOTDIR/Makefile
 
@@ -109,7 +96,7 @@ echo 'MODULEDIR   = drivers/${ROBOT}' >> $MAKEFILE || exit 1
 echo 'SOURCES     = ${ROBOT}.cpp' >> $MAKEFILE || exit 1
 echo '' >> $MAKEFILE || exit 1
 echo 'SHIPDIR     = drivers/${ROBOT}' >> $MAKEFILE || exit 1
-echo 'SHIP        = ${ROBOT}.xml '$CAR'.rgb logo.rgb' >> $MAKEFILE || exit 1
+echo 'SHIP        = ${ROBOT}.xml ' >> $MAKEFILE || exit 1
 echo 'SHIPSUBDIRS = ' >> $MAKEFILE || exit 1
 echo '' >> $MAKEFILE || exit 1
 echo 'PKGSUBDIRS  = ${SHIPSUBDIRS}' >> $MAKEFILE || exit 1
@@ -152,7 +139,6 @@ echo '	<attstr name="desc" val="'$DESCRIPTION'"></attstr>' >> $XMLFILE || exit 1
 echo '	<attstr name="team" val=""></attstr>' >> $XMLFILE || exit 1
 echo '	<attstr name="author" val="'$AUTHOR'"></attstr>' >> $XMLFILE || exit 1
 echo '	<attstr name="car name" val="'$CAR'"></attstr>' >> $XMLFILE || exit 1
-echo '	<attstr name="category" val="'$CATEGORY'"></attstr>' >> $XMLFILE || exit 1
 echo '	<attnum name="race number" val="0"></attnum>' >> $XMLFILE || exit 1
 echo '	<attnum name="red" val="1.0"></attnum>' >> $XMLFILE || exit 1
 echo '	<attnum name="green" val="1.0"></attnum>' >> $XMLFILE || exit 1
@@ -224,8 +210,8 @@ echo $NAME'(tModInfo *modInfo) ' >> $CPPFILE || exit 1
 echo '{' >> $CPPFILE || exit 1
 echo '    memset(modInfo, 0, 10*sizeof(tModInfo));' >> $CPPFILE || exit 1
 echo '' >> $CPPFILE || exit 1
-echo '    modInfo->name    = strdup("'$NAME'");		/* name of the module (short) */' >> $CPPFILE || exit 1
-echo '    modInfo->desc    = strdup("'$DESCRIPTION'");	/* description of the module (can be long) */' >> $CPPFILE || exit 1
+echo '    modInfo->name    = "'$NAME'";		/* name of the module (short) */' >> $CPPFILE || exit 1
+echo '    modInfo->desc    = "'$DESCRIPTION'";	/* description of the module (can be long) */' >> $CPPFILE || exit 1
 echo '    modInfo->fctInit = InitFuncPt;		/* init function */' >> $CPPFILE || exit 1
 echo '    modInfo->gfId    = ROB_IDENT;		/* supported framework version */' >> $CPPFILE || exit 1
 echo '    modInfo->index   = 1;' >> $CPPFILE || exit 1
@@ -268,15 +254,13 @@ echo '/* Drive during race. */' >> $CPPFILE || exit 1
 echo 'static void  ' >> $CPPFILE || exit 1
 echo 'drive(int index, tCarElt* car, tSituation *s) ' >> $CPPFILE || exit 1
 echo '{ ' >> $CPPFILE || exit 1
-echo '    memset((void *)&car->ctrl, 0, sizeof(tCarCtrl)); ' >> $CPPFILE || exit 1
+echo '    memset(&car->ctrl, 0, sizeof(tCarCtrl)); ' >> $CPPFILE || exit 1
 echo '    car->ctrl.brakeCmd = 1.0; /* all brakes on ... */ ' >> $CPPFILE || exit 1
 echo '    /*  ' >> $CPPFILE || exit 1
 echo '     * add the driving code here to modify the ' >> $CPPFILE || exit 1
-echo '     * car->_steerCmd ' >> $CPPFILE || exit 1
-echo '     * car->_accelCmd ' >> $CPPFILE || exit 1
-echo '     * car->_brakeCmd ' >> $CPPFILE || exit 1
-echo '     * car->_gearCmd ' >> $CPPFILE || exit 1
-echo '     * car->_clutchCmd ' >> $CPPFILE || exit 1
+echo '     * car->ctrl.steer ' >> $CPPFILE || exit 1
+echo '     * car->ctrl.accelCmd ' >> $CPPFILE || exit 1
+echo '     * car->ctrl.brakeCmd ' >> $CPPFILE || exit 1
 echo '     */ ' >> $CPPFILE || exit 1
 echo '}' >> $CPPFILE || exit 1
 echo '' >> $CPPFILE || exit 1
